@@ -17,6 +17,44 @@ from django.db.models import Q
 
 
 # Create your views here.
+# def cari(request):
+#     datakategori=request.GET.get('kategori')
+#     datakata=request.GET.get('kata')
+#     if datakategori == "all":
+#         hasilcari = Produk.objects.filter(Q(nama_produk_icontains=datakata)).order_by('-id')
+#     else:
+#         hasilcari = Produk.objects.filter(Q(nama_produk_icontains=datakata) & Q(kategori_id_exact=datakategori)).order_by('-id')
+
+#     cart_product_form = CartAddProductForm()
+#     jmlproduk = hasilcari.count()
+#     context = {
+#         "judul": "Halaman Cari",
+#         "Cart_product_form": cart_product_form,
+#         "hasilcari": hasilcari,
+#         "jmlproduk": jmlproduk
+#     }
+#     print(hasilcari)
+#     return render(request, 'cari.html', context)
+
+def cari(request):
+    datakategori=request.GET.get('kategori')
+    datakata=request.GET.get('kata')
+    if datakategori == "all":
+        hasilcari = Produk.objects.filter(Q(nama_produk__icontains=datakata)).order_by('-id')
+    else:
+        hasilcari = Produk.objects.filter(Q(nama_produk__icontains=datakata & Q(kategori__id__exact=datakategori))).order_by('-id')
+    
+    cart_product_form = CartAddProductForm()
+    jmlproduk = hasilcari.count()
+    context = {
+        "judul" : "Halaman Cari",
+        "cart_product_form" : cart_product_form,
+        "hasilcari" : hasilcari,
+        "jmlproduk" : jmlproduk,
+    }
+    print(hasilcari)
+    return render(request, 'cari.html', context)
+
 def beranda(request):
     kategori = Kategori.objects.filter(aktif=True).order_by('-id')
     slider = Slide.objects.filter(aktif=True).order_by('-id')
@@ -270,21 +308,3 @@ class CheckoutView(View):
         messages.success(request, 'Pesanan Anda akan segera diproses, silakan tunggu akan ada respon selanjutnya!')
         return render(request, 'checkout.html', context, status=400)
 
-def cari(request):
-    datakategori=request.GET.get('kategori')
-    datakata=request.GET.get('kata')
-    if datakategori == "all":
-        hasilcari = Produk.objects.filter(Q(nama_produk_icontains=datakata)).order_by('-id')
-    else:
-        hasilcari = Produk.objects.filter(Q(nama_produk_icontains=datakata) & Q(kategori_id_exact=datakategori)).order_by('-id')
-
-    cart_product_form = CartAddProductForm()
-    jmlproduk = hasilcari.count()
-    context = {
-        "judul": "Halaman Cari",
-        "Cart_product_form": cart_product_form,
-        "hasilcari": hasilcari,
-        "jmlproduk": jmlproduk
-    }
-    print(hasilcari)
-    return render(request, 'cari.html', context)

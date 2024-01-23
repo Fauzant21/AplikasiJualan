@@ -106,7 +106,7 @@
                                                 <div class="product_desc_info">
                                                     <h4><a class="product_name" href="{% url "produk" cari.kategori.slug cari.slug %}">{{cari.nama_produk}}</a></h4>
                                                     <div class="price-box">
-                                                        {% ifcari.diskon == 0 %}
+                                                        {% if cari.diskon == 0 %}
                                                             <span class="new-price new-price-2">Rp. {{cari.harga|intcomma}}</span>
                                                         {% else %}
                                                             <span class="new-price new-price-2">Rp. {{cari.setelah_diskon|intcomma}}</span>
